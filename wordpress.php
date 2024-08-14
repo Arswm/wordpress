@@ -195,3 +195,12 @@ function display_podcast_picture() {
     return '';
 }
 add_shortcode('podcast_picture', 'display_podcast_picture');
+
+
+
+
+
+// رونوشت ها فقط دوتای آخرشون نشون داده بشه 
+define('WP_POST_REVISIONS', 2);
+
+
