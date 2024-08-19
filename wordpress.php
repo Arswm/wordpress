@@ -204,3 +204,44 @@ add_shortcode('podcast_picture', 'display_podcast_picture');
 define('WP_POST_REVISIONS', 2);
 
 
+// this code will show related posts inside every signle blog post 
+
+
+ 
+add_filter('the_content',function ($content){
+    if(is_singular('post')){
+        $post_id = get_the_ID();
+        ob_start();
+        $args = array(
+            'post_type' => 'post',
+            'posts_per_page' => '1',
+            'post_status' => 'publish',
+            'post__not_in' => array($post_id),
+            'category__in' => wp_get_post_categories($post_id),
+        );
+        $query = new WP_Query($args);
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+                $query->the_post();
+                ?>
+                <p>
+                    <a href="<?php the_permalink(); ?>" style="padding:5px 15px;display: flex;flex-wrap:wrap;align-items: center;margin: 20px 0;border: 1px solid #ddd;border-radius: 5px;">
+                        <?php the_post_thumbnail('thumbnail', ['style' => 'width:50px;height:50px;border-radius:5px;object-fit:cover;']); ?>
+                        <span style="color: blue;margin: 0 15px 0 5px;font-weight: bold;display: inline-block">بیشتر بخوانید:</span>
+                        <b style="color: #222;"><?php the_title(); ?></b>
+                    </a>
+                </p>
+                <?php
+            }
+        }
+        wp_reset_postdata();
+        $related_html = ob_get_clean();
+        $paragraphs = explode( '</p>', $content );
+        $middle_index = floor( count( $paragraphs ) / 2 );
+        array_splice( $paragraphs, $middle_index, 0, '<p>' . $related_html . '</p>' );
+        return implode( '', $paragraphs );
+    }
+    return $content;
+});
+
+
