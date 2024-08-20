@@ -245,3 +245,14 @@ add_filter('the_content',function ($content){
 });
 
 
+
+
+
+// change the h2 to p in the comment sections
+function custom_comment_form_title($defaults) {
+    // Change the title tag from h2 to p
+    $defaults['title_reply'] = '<p id="reply-title" style="font-size : 1.1em ;" class="comment-reply-title">' . __('دیدگاهتان را بنویسید') . '</p>';
+    return $defaults;
+}
+add_filter('comment_form_defaults', 'custom_comment_form_title');
+
