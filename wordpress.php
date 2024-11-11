@@ -256,3 +256,16 @@ function custom_comment_form_title($defaults) {
 }
 add_filter('comment_form_defaults', 'custom_comment_form_title');
 
+
+
+// code for closing wp-json endpoint rest
+
+add_filter('rest_endpoints', function( $endpoints ) {
+    if ( isset( $endpoints['/wp/v2/users'] ) ) {
+        unset( $endpoints['/wp/v2/users'] );
+    }
+    if ( isset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] ) ) {
+        unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+    }
+    return $endpoints;
+});
